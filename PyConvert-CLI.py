@@ -9,18 +9,10 @@ yellow = '\033[93m'
 green = '\033[92m'
 clear = '\033[0m'
 cyan = '\033[96m'
-white = '\33[97m'
 magenta = '\033[95m'
 default = '\033[97m'
 
-def convert_items(zip_file_name):
-    # create tmp folder if it doesn't exist
-    if not os.path.exists('tmp'):
-        os.mkdir('tmp')
-
-    # unzip the zip file into the tmp folder
-    with ZipFile(zip_file_name, 'r') as zip:
-        zip.extractall('tmp')
+def convert_items():
 
     # create output folder if it doesn't exist
     if not os.path.exists('output'):
@@ -39,31 +31,21 @@ def convert_items(zip_file_name):
         try:
             img = Image.open(f'tmp/assets/minecraft/textures/items/{filename}.png')
             items.paste(img, (x, y))
-            print(f"{magenta}[normal]{default}: {green}{filename}.png{default} pasted to {yellow}({x}, {y})")
+            print(f"{magenta}[normal]:{default} {green}{filename}.png{default} pasted to: {yellow}({x}, {y})")
         except FileNotFoundError:
             try:
                 img = Image.open(f'fallback/items/{filename}.png')
                 items.paste(img, (x, y))
-                print(f"{cyan}[fallback]{default}: {green}{filename}.png{default} pasted to {yellow}({x}, {y})")
+                print(f"{cyan}[fallback]:{default} {green}{filename}.png{default} pasted to: {yellow}({x}, {y})")
                 continue
             except FileNotFoundError:
-                print(f"{dred}[skipped]{default}: {green}{filename}.png{default} not found ... {red}Skipping")
+                print(f"{dred}[skipped]:{default} {green}{filename}.png{default} not found ... {red}Skipping")
                 continue
     
     # save the new image to the output folder
     items.save('output/items.png')
-
-    # delete the tmp folder and everything in it
-    shutil.rmtree('tmp')
     
-def convert_blocks(zip_file_name):
-    # create tmp folder if it doesn't exist
-    if not os.path.exists('tmp'):
-        os.mkdir('tmp')
-
-    # unzip the zip file into the tmp folder
-    with ZipFile(zip_file_name, 'r') as zip:
-        zip.extractall('tmp')
+def convert_blocks():
 
     # create output folder if it doesn't exist
     if not os.path.exists('output'):
@@ -82,15 +64,15 @@ def convert_blocks(zip_file_name):
         try:
             img = Image.open(f'tmp/assets/minecraft/textures/blocks/{filename}.png')
             terrain.paste(img, (x, y))
-            print(f"{magenta}[normal]{default}: {green}{filename}.png{default} pasted to {yellow}({x}, {y})")
+            print(f"{magenta}[normal]:{default} {green}{filename}.png{default} pasted to: {yellow}({x}, {y})")
         except FileNotFoundError:
             try:
                 img = Image.open(f'fallback/blocks/{filename}.png')
                 terrain.paste(img, (x, y))
-                print(f"{cyan}[fallback]{default}: {green}{filename}.png{default} pasted to {yellow}({x}, {y})")
+                print(f"{cyan}[fallback]:{default} {green}{filename}.png{default} pasted to: {yellow}({x}, {y})")
                 continue
             except FileNotFoundError:
-                print(f"{dred}[skipped]{default}: {green}{filename}.png{default} not found ... {red}Skipping")
+                print(f"{dred}[skipped]:{default} {green}{filename}.png{default} not found ... {red}Skipping")
                 continue
     
     # save the new image to the output folder
@@ -103,18 +85,8 @@ def convert_blocks(zip_file_name):
     # resize image and save
     mipMapLevel3 = terrain.resize((64, 136))
     mipMapLevel3.save('output/terrainMipMapLevel3.png')
-
-    # delete the tmp folder and everything in it
-    shutil.rmtree('tmp')
     
-def convert_armor(zip_file_name):
-    # create tmp folder if it doesn't exist
-    if not os.path.exists('tmp'):
-        os.mkdir('tmp')
-
-    # unzip the zip file into the tmp folder
-    with ZipFile(zip_file_name, 'r') as zip:
-        zip.extractall('tmp')
+def convert_armor():
 
     # create output folder if it doesn't exist
     if not os.path.exists('output/armor'):
@@ -147,7 +119,7 @@ def convert_armor(zip_file_name):
             # File exists in the source directory, copy it to the output directory
             output_filepath = os.path.join(output_dir, output_filename + '.png')
             shutil.copy(source_filepath, output_filepath)
-            print(f"{magenta}[normal]{default}: {green}{source_filename}.png{default} moved to {green}/armor/{output_filename}.png")
+            print(f"{magenta}[normal]:{default} {green}{source_filename}.png{default} moved to: {yellow}/armor/{output_filename}.png")
         else:
             # File doesn't exist in the source directory, check the fallback directory
             fallback_filepath = os.path.join(fallback_dir, source_filename + '.png')
@@ -155,22 +127,12 @@ def convert_armor(zip_file_name):
                 # File exists in the fallback directory, copy it to the output directory
                 output_filepath = os.path.join(output_dir, output_filename + '.png')
                 shutil.copy(fallback_filepath, output_filepath)
-                print(f"{cyan}[fallback]{default}: {green}{source_filename}.png{default} moved to {green}/armor/{output_filename}.png")
+                print(f"{cyan}[fallback]:{default} {green}{source_filename}.png{default} moved to: {yellow}/armor/{output_filename}.png")
             else:
                 # File doesn't exist in either directory, print an error message
-                print(f"{dred}[skipped]{default}: {green}{source_filename}.png{default} not found ... {red}Skipping")
-
-    # delete the tmp folder and everything in it
-    shutil.rmtree('tmp')
+                print(f"{dred}[skipped]:{default} {green}{source_filename}.png{default} not found ... {red}Skipping")
     
-def convert_environment(zip_file_name):
-    # create tmp folder if it doesn't exist
-    if not os.path.exists('tmp'):
-        os.mkdir('tmp')
-
-    # unzip the zip file into the tmp folder
-    with ZipFile(zip_file_name, 'r') as zip:
-        zip.extractall('tmp')
+def convert_environment():
 
     # create output folder if it doesn't exist
     if not os.path.exists("output/environment"):
@@ -195,7 +157,7 @@ def convert_environment(zip_file_name):
                 dest_path = os.path.join('output', 'terrain', filename + '.png')
             # Copy the file from the source path to the destination path
             shutil.copyfile(source_path, dest_path)
-            print(f"{magenta}[normal]{default}: {green}{filename}.png{default} moved to {green}{dest_path}")
+            print(f"{magenta}[normal]:{default} {green}{filename}.png{default} moved to: {yellow}/{dest_path}")
         else:
             # If the file doesn't exist in the input folder, search the fallback folder
             fallback_path = os.path.join('fallback', 'environment', filename + '.png')
@@ -207,21 +169,12 @@ def convert_environment(zip_file_name):
                     dest_path = os.path.join('output', 'terrain', filename + '.png')
                 # Copy the file from the fallback folder to the destination path
                 shutil.copyfile(fallback_path, dest_path)
-                print(f"{cyan}[fallback]{default}: {green}{filename}.png{default} moved to {green}{dest_path}")
+                print(f"{cyan}[fallback]:{default} {green}{filename}.png{default} moved to: {yellow}/{dest_path}")
             else:
-                print(f"{dred}[skipped]{default}: {green}{filename}.png{default} not found ... {red}Skipping")
-                
-    # delete the tmp folder and everything in it
-    shutil.rmtree('tmp')
-    
-def convert_particles(zip_file_name):
-    # create tmp folder if it doesn't exist
-    if not os.path.exists('tmp'):
-        os.mkdir('tmp')
+                print(f"{dred}[skipped]:{default} {green}{filename}.png{default} not found ... {red}Skipping")
 
-    # unzip the zip file into the tmp folder
-    with ZipFile(zip_file_name, 'r') as zip:
-        zip.extractall('tmp')
+    
+def convert_particles():
 
     # create output folder if it doesn't exist
     if not os.path.exists('output'):
@@ -247,7 +200,7 @@ def convert_particles(zip_file_name):
         shutil.copyfile(input_file_path, output_file_path)
 
         # Print a message indicating that the file was copied
-        print(f"{magenta}[normal]{default}: {green}{filename}{default} moved to {green}/{output_folder}")
+        print(f"{magenta}[normal]:{default} {green}{filename}{default} moved to: {yellow}/{output_folder}")
     else:
         # Get the full path to the fallback file
         fallback_file_path = os.path.join(fallback_folder, filename)
@@ -261,22 +214,12 @@ def convert_particles(zip_file_name):
             shutil.copyfile(fallback_file_path, output_file_path)
 
             # Print a message indicating that the fallback file was copied
-            print(f"{cyan}[fallback]{default}: {green}{filename}{default} moved to {green}/{output_folder}")
+            print(f"{cyan}[fallback]:{default} {green}{filename}{default} moved to: {yellow}/{output_folder}")
         else:
             # Print an error message if the file doesn't exist in either folder
-            print(f"{dred}[skipped]{default}: {green}{filename}{default} not found ... {red}Skipping")
-            
-    # delete the tmp folder and everything in it
-    shutil.rmtree('tmp')
+            print(f"{dred}[skipped]:{default} {green}{filename}{default} not found ... {red}Skipping")
 
-def convert_fire(zip_file_name):
-    # create tmp folder if it doesn't exist
-    if not os.path.exists('tmp'):
-        os.mkdir('tmp')
-
-    # unzip the zip file into the tmp folder
-    with ZipFile(zip_file_name, 'r') as zip:
-        zip.extractall('tmp')
+def convert_fire():
 
     # create output folder if it doesn't exist
     if not os.path.exists('output/fire'):
@@ -299,7 +242,7 @@ def convert_fire(zip_file_name):
             # File exists in the source directory, copy it to the output directory
             output_filepath = os.path.join(output_dir, output_filename + '.png')
             shutil.copy(source_filepath, output_filepath)
-            print(f"{magenta}[normal]{default}: {green}{source_filename}.png{default} moved to {green}/{output_dir}/{output_filename}.png")
+            print(f"{magenta}[normal]:{default} {green}{source_filename}.png{default} moved to: {yellow}/{output_dir}/{output_filename}.png")
         else:
             # File doesn't exist in the source directory, check the fallback directory
             fallback_filepath = os.path.join(fallback_dir, source_filename + '.png')
@@ -307,22 +250,12 @@ def convert_fire(zip_file_name):
                 # File exists in the fallback directory, copy it to the output directory
                 output_filepath = os.path.join(output_dir, output_filename + '.png')
                 shutil.copy(fallback_filepath, output_filepath)
-                print(f"{cyan}[fallback]{default}: {green}{source_filename}.png{default} moved to {green}/{output_dir}/{output_filename}.png")
+                print(f"{cyan}[fallback]:{default} {green}{source_filename}.png{default} moved to: {yellow}/{output_dir}/{output_filename}.png")
             else:
                 # File doesn't exist in either directory, print an error message
-                print(f"{dred}[skipped]{default}: {green}{source_filename}.png{default} not found ... {red}Skipping")
+                print(f"{dred}[skipped]:{default} {green}{source_filename}.png{default} not found ... {red}Skipping")
 
-    # delete the tmp folder and everything in it
-    shutil.rmtree('tmp')
-
-def convert_misc(zip_file_name):
-    # create tmp folder if it doesn't exist
-    if not os.path.exists('tmp'):
-        os.mkdir('tmp')
-
-    # unzip the zip file into the tmp folder
-    with ZipFile(zip_file_name, 'r') as zip:
-        zip.extractall('tmp')
+def convert_misc():
 
     # create output folder if it doesn't exist
     if not os.path.exists('output/misc'):
@@ -357,7 +290,7 @@ def convert_misc(zip_file_name):
             shutil.copyfile(input_file_path, output_file_path)
 
             # Print a message indicating that the file was copied
-            print(f"{magenta}[normal]{default}: {green}{filename}.png{default} moved to {green}{output_folder}/{output_filename}.png")
+            print(f"{magenta}[normal]:{default} {green}{filename}.png{default} moved to: {yellow}/{output_folder}/{output_filename}.png")
         else:
             # Get the full path to the fallback file
             fallback_file_path = os.path.join(fallback_folder, filename + '.png')
@@ -377,14 +310,21 @@ def convert_misc(zip_file_name):
                 shutil.copyfile(fallback_file_path, output_file_path)
 
                 # Print a message indicating that the fallback file was copied
-                print(f"{cyan}[fallback]{default}: {green}{filename}.png{default} moved to {green}{output_folder}/{output_filename}.png")
+                print(f"{cyan}[fallback]:{default} {green}{filename}.png{default} moved to: {yellow}/{output_folder}/{output_filename}.png")
             else:
                 # Print an error message if the file doesn't exist in either folder
-                print(f"{dred}[skipped]{default}: {green}{filename}.png{default} not found ... {red}Skipping")
-                
-    # delete the tmp folder and everything in it
-    shutil.rmtree('tmp')
+                print(f"{dred}[skipped]:{default} {green}{filename}.png{default} not found ... {red}Skipping")
+
     
+def prepare_tmp(zip_file_name):
+    # create tmp folder if it doesn't exist
+    if not os.path.exists('tmp'):
+        os.mkdir('tmp')
+
+    # unzip the zip file into the tmp folder
+    with ZipFile(zip_file_name, 'r') as zip:
+        zip.extractall('tmp')
+
 def set_args():
     parser = argparse.ArgumentParser(description="Convert 1.8 Texture Packs to Legacy Console")
     parser.add_argument("-items", "--convert_items", metavar="<zip path>", help="Converts only items")
@@ -398,27 +338,51 @@ def set_args():
     args = parser.parse_args()
 
     if args.convert_items:
-        convert_items(args.convert_items)
+        prepare_tmp(args.convert_items)
+        convert_items()
+        shutil.rmtree('tmp')
+        print(f"{yellow}[completion]:{default} Process Completed!{red} <3")
     elif args.convert_blocks:
-        convert_blocks(args.convert_blocks)
+        prepare_tmp(args.convert_blocks)
+        convert_blocks()
+        shutil.rmtree('tmp')
+        print(f"{yellow}[completion]:{default} Process Completed!{red} <3")
     elif args.convert_armor:
-        convert_armor(args.convert_armor)
+        prepare_tmp(args.convert_armor)
+        convert_armor()
+        shutil.rmtree('tmp')
+        print(f"{yellow}[completion]:{default} Process Completed!{red} <3")
     elif args.convert_environment:
-        convert_environment(args.convert_environment)
+        prepare_tmp(args.convert_environment)
+        convert_environment()
+        shutil.rmtree('tmp')
+        print(f"{yellow}[completion]:{default} Process Completed!{red} <3")
     elif args.convert_particles:
-        convert_particles(args.convert_particles)
+        prepare_tmp(args.convert_particles)
+        convert_particles()
+        shutil.rmtree('tmp')
+        print(f"{yellow}[completion]:{default} Process Completed!{red} <3")
     elif args.convert_fire:
-        convert_fire(args.convert_fire)
+        prepare_tmp(args.convert_fire)
+        convert_fire()
+        shutil.rmtree('tmp')
+        print(f"{yellow}[completion]:{default} Process Completed!{red} <3")
     elif args.convert_misc:
-        convert_misc(args.convert_misc)
+        prepare_tmp(args.convert_misc)
+        convert_misc()
+        shutil.rmtree('tmp')
+        print(f"{yellow}[completion]:{default} Process Completed!{red} <3")
     elif args.convert_all:
-        convert_items(args.convert_all)
-        convert_blocks(args.convert_all)
-        convert_armor(args.convert_all)
-        convert_environment(args.convert_all)
-        convert_particles(args.convert_all)
-        convert_fire(args.convert_all)
-        convert_misc(args.convert_all)
+        prepare_tmp(args.convert_all)
+        convert_items()
+        convert_blocks()
+        convert_armor()
+        convert_environment()
+        convert_particles()
+        convert_fire()
+        convert_misc()
+        shutil.rmtree('tmp')
+        print(f"{yellow}[completion]:{default} Process Completed!{red} <3")
     else:
         parser.print_help()
         
