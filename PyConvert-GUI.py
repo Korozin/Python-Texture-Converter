@@ -268,33 +268,44 @@ class MainWindow(QMainWindow):
             input_error_box.move(MainWindow().geometry().center() - input_error_box.rect().center())
             input_error_box.exec_()
         else:
+            # create tmp folder if it doesn't exist
+            if not os.path.exists('tmp'):
+                os.mkdir('tmp')
+
+            # unzip the zip file into the tmp folder
+            with ZipFile(self.input_zip_edit.text(), 'r') as zip:
+                zip.extractall('tmp')
+
             # Convert items if Items Checkbox is checked
             if self.items_checkbox.isChecked():
-                self.convert_items(self.input_zip_edit.text())
+                self.convert_items()
             
             # Convert blocks if Blocks Checkbox is checked
             if self.blocks_checkbox.isChecked():
-                self.convert_blocks(self.input_zip_edit.text())
+                self.convert_blocks()
             
             # Convert armor if Armor Checkbox is checked
             if self.armor_checkbox.isChecked():
-                self.convert_armor(self.input_zip_edit.text())
+                self.convert_armor()
             
             # Convert environment if Environment Checkbox is checked
             if self.environment_checkbox.isChecked():
-                self.convert_environment(self.input_zip_edit.text())
+                self.convert_environment()
             
             # Convert particles if Particles Checkbox is checked
             if self.particles_checkbox.isChecked():
-                self.convert_particles(self.input_zip_edit.text())
+                self.convert_particles()
             
             # Convert fire if Fire Checkbox is checked
             if self.fire_checkbox.isChecked():
-                self.convert_fire(self.input_zip_edit.text())
+                self.convert_fire()
             
             # Convert misc if Misc Checkbox is checked
             if self.misc_checkbox.isChecked():
-                self.convert_misc(self.input_zip_edit.text())
+                self.convert_misc()
+
+            # delete the tmp folder and everything in it
+            shutil.rmtree('tmp')
             
             # Create QMessageBox dialog after conversion completion
             completion_box = QMessageBox()
@@ -327,14 +338,7 @@ class MainWindow(QMainWindow):
             
             
     # Function to convert the items from the "items" folder
-    def convert_items(self, zip_file_name):
-        # create tmp folder if it doesn't exist
-        if not os.path.exists('tmp'):
-            os.mkdir('tmp')
-
-        # unzip the zip file into the tmp folder
-        with ZipFile(zip_file_name, 'r') as zip:
-            zip.extractall('tmp')
+    def convert_items(self):
 
         if self.output_folder_edit.text() == "":
             selected_output = "output"
@@ -375,20 +379,10 @@ class MainWindow(QMainWindow):
     
         # save the new image to the output folder
         items.save(f'{selected_output}/items.png')
-
-        # delete the tmp folder and everything in it
-        shutil.rmtree('tmp')
         
         
     # Function to convert the terrain from the "blocks" folder
-    def convert_blocks(self, zip_file_name):
-        # create tmp folder if it doesn't exist
-        if not os.path.exists('tmp'):
-            os.mkdir('tmp')
-
-        # unzip the zip file into the tmp folder
-        with ZipFile(zip_file_name, 'r') as zip:
-            zip.extractall('tmp')
+    def convert_blocks(self):
 
         if self.output_folder_edit.text() == "":
             selected_output = "output"
@@ -437,20 +431,10 @@ class MainWindow(QMainWindow):
         # resize image and save
         mipMapLevel3 = terrain.resize((64, 136))
         mipMapLevel3.save(f'{selected_output}/terrainMipMapLevel3.png')
-
-        # delete the tmp folder and everything in it
-        shutil.rmtree('tmp')
         
         
     # Function to convert the armor from the "/models/armor" folder
-    def convert_armor(self, zip_file_name):
-        # create tmp folder if it doesn't exist
-        if not os.path.exists('tmp'):
-            os.mkdir('tmp')
-
-        # unzip the zip file into the tmp folder
-        with ZipFile(zip_file_name, 'r') as zip:
-            zip.extractall('tmp')
+    def convert_armor(self):
 
         if self.output_folder_edit.text() == "":
             selected_output = "output"
@@ -506,20 +490,10 @@ class MainWindow(QMainWindow):
                 else:
                     # File doesn't exist in either directory, print an error message
                     self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
-
-        # delete the tmp folder and everything in it
-        shutil.rmtree('tmp')
         
         
     # Function to convert environment and terrain from the "environment" folder
-    def convert_environment(self, zip_file_name):
-        # create tmp folder if it doesn't exist
-        if not os.path.exists('tmp'):
-            os.mkdir('tmp')
-
-        # unzip the zip file into the tmp folder
-        with ZipFile(zip_file_name, 'r') as zip:
-            zip.extractall('tmp')
+    def convert_environment(self):
             
         if self.output_folder_edit.text() == "":
             selected_output = "output"
@@ -569,20 +543,10 @@ class MainWindow(QMainWindow):
                     self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> moved to </span><span style='color:yellow'>/{dest_path}</span>")
                 else:
                     self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
-                
-        # delete the tmp folder and everything in it
-        shutil.rmtree('tmp')
         
         
     # Function to convert the particles from the "particle" folder
-    def convert_particles(self, zip_file_name):
-        # create tmp folder if it doesn't exist
-        if not os.path.exists('tmp'):
-            os.mkdir('tmp')
-
-        # unzip the zip file into the tmp folder
-        with ZipFile(zip_file_name, 'r') as zip:
-            zip.extractall('tmp')
+    def convert_particles(self):
 
         if self.output_folder_edit.text() == "":
             selected_output = "output"
@@ -636,20 +600,10 @@ class MainWindow(QMainWindow):
             else:
                 # Print an error message if the file doesn't exist in either folder
                 self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
-            
-        # delete the tmp folder and everything in it
-        shutil.rmtree('tmp')
         
     
     # Function to convert the fire files from the "blocks" folder
-    def convert_fire(self, zip_file_name):
-        # create tmp folder if it doesn't exist
-        if not os.path.exists('tmp'):
-            os.mkdir('tmp')
-
-        # unzip the zip file into the tmp folder
-        with ZipFile(zip_file_name, 'r') as zip:
-            zip.extractall('tmp')
+    def convert_fire(self):
 
         if self.output_folder_edit.text() == "":
             selected_output = "output"
@@ -696,20 +650,10 @@ class MainWindow(QMainWindow):
                 else:
                     # File doesn't exist in either directory, print an error message
                     self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
-
-        # delete the tmp folder and everything in it
-        shutil.rmtree('tmp')
         
         
     # Function to convert items from the "misc" folder
-    def convert_misc(self, zip_file_name):
-        # create tmp folder if it doesn't exist
-        if not os.path.exists('tmp'):
-            os.mkdir('tmp')
-
-        # unzip the zip file into the tmp folder
-        with ZipFile(zip_file_name, 'r') as zip:
-            zip.extractall('tmp')
+    def convert_misc(self):
 
         if self.output_folder_edit.text() == "":
             selected_output = "output"
@@ -779,9 +723,6 @@ class MainWindow(QMainWindow):
                 else:
                     # Print an error message if the file doesn't exist in either folder
                     self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
-                
-        # delete the tmp folder and everything in it
-        shutil.rmtree('tmp')
         
     
     # Function to download, unzip, and delete fallback.zip
