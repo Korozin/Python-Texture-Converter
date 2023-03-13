@@ -33,23 +33,6 @@ class MainWindow(QMainWindow):
         calculate_screen = QDesktopWidget().availableGeometry().center()
         frame_geometry.moveCenter(calculate_screen)
         self.move(frame_geometry.topLeft())
-        
-        # Set Theme via QPalette
-        self.palette = QPalette()
-        self.palette.setColor(QPalette.Window, QColor(53, 53, 53))
-        self.palette.setColor(QPalette.WindowText, QColor(255, 255, 255))
-        self.palette.setColor(QPalette.Base, QColor(25, 25, 25))
-        self.palette.setColor(QPalette.AlternateBase, QColor(53, 53, 53))
-        self.palette.setColor(QPalette.ToolTipBase, QColor(255, 255, 220))
-        self.palette.setColor(QPalette.ToolTipText, QColor(0, 0, 0))
-        self.palette.setColor(QPalette.Text, QColor(255, 255, 255))
-        self.palette.setColor(QPalette.Button, QColor(53, 53, 53))
-        self.palette.setColor(QPalette.ButtonText, QColor(255, 255, 255))
-        self.palette.setColor(QPalette.BrightText, QColor(255, 0, 0))
-        self.palette.setColor(QPalette.Link, QColor(42, 130, 218))
-        self.palette.setColor(QPalette.Highlight, QColor(42, 130, 218))
-        self.palette.setColor(QPalette.HighlightedText, QColor(255, 255, 255))
-        self.setPalette(self.palette)
 
     def Create_Conversion_Tab(self):
         # --- Conversion Tab Items --- #
@@ -260,9 +243,6 @@ class MainWindow(QMainWindow):
             ok_button = input_error_box.button(QMessageBox.Ok)
             ok_button.setIcon(QIcon(check_icon))
         
-            # Set main theme to QMessageBox
-            input_error_box.setPalette(self.palette)
-        
             # Show and center QMessageBox
             input_error_box.show()
             input_error_box.move(MainWindow().geometry().center() - input_error_box.rect().center())
@@ -328,9 +308,6 @@ class MainWindow(QMainWindow):
             ok_button = completion_box.button(QMessageBox.Ok)
             ok_button.setIcon(QIcon(check_icon))
         
-            # Set main theme to QMessageBox
-            completion_box.setPalette(self.palette)
-        
             # Show and center QMessageBox
             completion_box.show()
             completion_box.move(MainWindow().geometry().center() - completion_box.rect().center())
@@ -362,19 +339,19 @@ class MainWindow(QMainWindow):
             try:
                 img = Image.open(f'tmp/assets/minecraft/textures/items/{filename}.png')
                 items.paste(img, (x, y))
-                self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> pasted to </span><span style='color:yellow'>({x}, {y})</span>")
+                self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> pasted to </span><span style='color:yellow'>({x}, {y})</span>")
             except FileNotFoundError:
                 try:
                     if self.fallback_checkbox.isChecked():
                         img = Image.open(f'fallback/items/{filename}.png')
                         items.paste(img, (x, y))
-                        self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> pasted to </span><span style='color:yellow'>({x}, {y})</span>")
+                        self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> pasted to </span><span style='color:yellow'>({x}, {y})</span>")
                         continue
                     else:
-                        self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
+                        self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> not found ... </span><span style='color:red'>Skipping</span>")
                         continue
                 except FileNotFoundError:
-                    self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
+                    self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> not found ... </span><span style='color:red'>Skipping</span>")
                     continue
     
         # save the new image to the output folder
@@ -406,19 +383,19 @@ class MainWindow(QMainWindow):
             try:
                 img = Image.open(f'tmp/assets/minecraft/textures/blocks/{filename}.png')
                 terrain.paste(img, (x, y))
-                self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> pasted to </span><span style='color:yellow'>({x}, {y})</span>")
+                self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> pasted to </span><span style='color:yellow'>({x}, {y})</span>")
             except FileNotFoundError:
                 try:
                     if self.fallback_checkbox.isChecked():
                         img = Image.open(f'fallback/blocks/{filename}.png')
                         terrain.paste(img, (x, y))
-                        self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> pasted to </span><span style='color:yellow'>({x}, {y})</span>")
+                        self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> pasted to </span><span style='color:yellow'>({x}, {y})</span>")
                         continue
                     else:
-                        self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
+                        self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> not found ... </span><span style='color:red'>Skipping</span>")
                         continue
                 except FileNotFoundError:
-                    self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
+                    self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> not found ... </span><span style='color:red'>Skipping</span>")
                     continue
     
         # save the new image to the output folder
@@ -478,7 +455,7 @@ class MainWindow(QMainWindow):
                 # File exists in the source directory, copy it to the output directory
                 output_filepath = os.path.join(output_dir, output_filename + '.png')
                 shutil.copy(source_filepath, output_filepath)
-                self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:white'> moved to </span><span style='color:yellow'>/{output_dir}/{output_filename}</span>")
+                self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:black'> moved to </span><span style='color:yellow'>/{output_dir}/{output_filename}</span>")
             else:
                 # File doesn't exist in the source directory, check the fallback directory
                 fallback_filepath = os.path.join(fallback_dir, source_filename + '.png')
@@ -486,10 +463,10 @@ class MainWindow(QMainWindow):
                     # File exists in the fallback directory, copy it to the output directory
                     output_filepath = os.path.join(output_dir, output_filename + '.png')
                     shutil.copy(fallback_filepath, output_filepath)
-                    self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:white'> moved to </span><span style='color:yellow'>/{output_dir}/{output_filename}</span>")
+                    self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:black'> moved to </span><span style='color:yellow'>/{output_dir}/{output_filename}</span>")
                 else:
                     # File doesn't exist in either directory, print an error message
-                    self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
+                    self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:black'> not found ... </span><span style='color:red'>Skipping</span>")
         
         
     # Function to convert environment and terrain from the "environment" folder
@@ -528,7 +505,7 @@ class MainWindow(QMainWindow):
                     dest_path = os.path.join(f'{selected_output}', 'terrain', filename + '.png')
                 # Copy the file from the source path to the destination path
                 shutil.copyfile(source_path, dest_path)
-                self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> moved to </span><span style='color:yellow'>/{dest_path}</span>")
+                self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> moved to </span><span style='color:yellow'>/{dest_path}</span>")
             else:
                 # If the file doesn't exist in the input folder, search the fallback folder
                 fallback_path = os.path.join('fallback', 'environment', filename + '.png')
@@ -540,9 +517,9 @@ class MainWindow(QMainWindow):
                         dest_path = os.path.join(f'{selected_output}', 'terrain', filename + '.png')
                     # Copy the file from the fallback folder to the destination path
                     shutil.copyfile(fallback_path, dest_path)
-                    self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> moved to </span><span style='color:yellow'>/{dest_path}</span>")
+                    self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> moved to </span><span style='color:yellow'>/{dest_path}</span>")
                 else:
-                    self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
+                    self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> not found ... </span><span style='color:red'>Skipping</span>")
         
         
     # Function to convert the particles from the "particle" folder
@@ -582,7 +559,7 @@ class MainWindow(QMainWindow):
             shutil.copyfile(input_file_path, output_file_path)
 
             # Print a message indicating that the file was copied
-            self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{filename}</span><span style='color:white'> moved to </span><span style='color:yellow'>/{output_folder}</span>")
+            self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{filename}</span><span style='color:black'> moved to </span><span style='color:yellow'>/{output_folder}</span>")
         else:
             # Get the full path to the fallback file
             fallback_file_path = os.path.join(fallback_folder, filename)
@@ -596,10 +573,10 @@ class MainWindow(QMainWindow):
                 shutil.copyfile(fallback_file_path, output_file_path)
 
                 # Print a message indicating that the fallback file was copied
-                self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{filename}</span><span style='color:white'> moved to </span><span style='color:yellow'>/{output_folder}</span>")
+                self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{filename}</span><span style='color:black'> moved to </span><span style='color:yellow'>/{output_folder}</span>")
             else:
                 # Print an error message if the file doesn't exist in either folder
-                self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
+                self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}</span><span style='color:black'> not found ... </span><span style='color:red'>Skipping</span>")
         
     
     # Function to convert the fire files from the "blocks" folder
@@ -638,7 +615,7 @@ class MainWindow(QMainWindow):
                 # File exists in the source directory, copy it to the output directory
                 output_filepath = os.path.join(output_dir, output_filename + '.png')
                 shutil.copy(source_filepath, output_filepath)
-                self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:white'> moved to </span><span style='color:yellow'>/{output_dir}/{output_filename}</span>")
+                self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:black'> moved to </span><span style='color:yellow'>/{output_dir}/{output_filename}</span>")
             else:
                 # File doesn't exist in the source directory, check the fallback directory
                 fallback_filepath = os.path.join(fallback_dir, source_filename + '.png')
@@ -646,10 +623,10 @@ class MainWindow(QMainWindow):
                     # File exists in the fallback directory, copy it to the output directory
                     output_filepath = os.path.join(output_dir, output_filename + '.png')
                     shutil.copy(fallback_filepath, output_filepath)
-                    self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:white'> moved to </span><span style='color:yellow'>/{output_dir}/{output_filename}</span>")
+                    self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:black'> moved to </span><span style='color:yellow'>/{output_dir}/{output_filename}</span>")
                 else:
                     # File doesn't exist in either directory, print an error message
-                    self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
+                    self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{source_filename}.png</span><span style='color:black'> not found ... </span><span style='color:red'>Skipping</span>")
         
         
     # Function to convert items from the "misc" folder
@@ -699,7 +676,7 @@ class MainWindow(QMainWindow):
                 shutil.copyfile(input_file_path, output_file_path)
 
                 # Print a message indicating that the file was copied
-                self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> moved to </span><span style='color:yellow'>/{output_folder}/{output_filename}.png</span>")
+                self.log_text_edit.append(f"<span style='color:magenta'>[normal]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> moved to </span><span style='color:yellow'>/{output_folder}/{output_filename}.png</span>")
             else:
                 # Get the full path to the fallback file
                 fallback_file_path = os.path.join(fallback_folder, filename + '.png')
@@ -719,10 +696,10 @@ class MainWindow(QMainWindow):
                     shutil.copyfile(fallback_file_path, output_file_path)
 
                     # Print a message indicating that the fallback file was copied
-                    self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> moved to </span><span style='color:yellow'>/{output_folder}/{output_filename}.png</span>")
+                    self.log_text_edit.append(f"<span style='color:cyan'>[fallback]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> moved to </span><span style='color:yellow'>/{output_folder}/{output_filename}.png</span>")
                 else:
                     # Print an error message if the file doesn't exist in either folder
-                    self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:white'> not found ... </span><span style='color:red'>Skipping</span>")
+                    self.log_text_edit.append(f"<span style='color:#c70000'>[skipped]:</span> <span style='color:#00f500'>{filename}.png</span><span style='color:black'> not found ... </span><span style='color:red'>Skipping</span>")
         
     
     # Function to download, unzip, and delete fallback.zip
@@ -739,12 +716,12 @@ class MainWindow(QMainWindow):
                 with ZipFile("fallback.zip", "r") as zip_ref:
                     zip_ref.extractall("fallback")
                 os.remove('fallback.zip')
-                self.log_text_edit.append("<span style='color:#00f500'>[log]: </span><span style='color:white'>downloaded fallback</span>")
-                self.log_text_edit.append("<span style='color:#00f500'>[log]: </span><span style='color:white'>unzipped fallback.zip</span>")
-                self.log_text_edit.append("<span style='color:#00f500'>[log]: </span><span style='color:white'>deleted fallback.zip</span>")
+                self.log_text_edit.append("<span style='color:#00f500'>[log]: </span><span style='color:black'>downloaded fallback</span>")
+                self.log_text_edit.append("<span style='color:#00f500'>[log]: </span><span style='color:black'>unzipped fallback.zip</span>")
+                self.log_text_edit.append("<span style='color:#00f500'>[log]: </span><span style='color:black'>deleted fallback.zip</span>")
         else:
             shutil.rmtree("fallback")
-            self.log_text_edit.append("<span style='color:#00f500'>[log]: </span><span style='color:white'>fallback already existed. Deleting and re-downloading</span>")
+            self.log_text_edit.append("<span style='color:#00f500'>[log]: </span><span style='color:black'>fallback already existed. Deleting and re-downloading</span>")
             self.download_fallback()
         
     
@@ -796,18 +773,15 @@ class MainWindow(QMainWindow):
             yes_button.setIcon(QIcon(check_icon))
             no_button.setIcon(QIcon(x_icon))
             
-            # Set main theme to QMessageBox
-            fallback_box.setPalette(self.palette)
-            
             # Get Button result using .exec_() method
             result = fallback_box.exec_()
             
             # Determine logic based on user result
             if result == QMessageBox.Yes:
-                self.log_text_edit.append("<span style='color:#00f500'>[log]: </span><span style='color:white'>user accepted download prompt</span>")
+                self.log_text_edit.append("<span style='color:#00f500'>[log]: </span><span style='color:black'>user accepted download prompt</span>")
                 self.download_fallback()
             else:
-                self.log_text_edit.append("<span style='color:#00f500'>[log]: </span><span style='color:white'>user declined download prompt</span>")
+                self.log_text_edit.append("<span style='color:#00f500'>[log]: </span><span style='color:black'>user declined download prompt</span>")
         
 
     # Function to clear the log
