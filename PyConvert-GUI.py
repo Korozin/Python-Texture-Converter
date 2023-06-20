@@ -748,7 +748,7 @@ class MainWindow(QMainWindow):
                     zip_ref.extractall("fallback")
                 os.remove('fallback.zip')
             else:
-                url = "https://korozin.github.io/files/fallback.zip"
+                url = "https://korozin.github.io/assets/downloads/textures/fallback.zip"
                 response = requests.get(url)
                 open("fallback.zip", "wb").write(response.content)
                 with ZipFile("fallback.zip", "r") as zip_ref:
