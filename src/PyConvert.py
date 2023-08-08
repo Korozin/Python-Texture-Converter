@@ -3,7 +3,7 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from Classes import MainWindow, ImageCreator, FileMover, TextureExtractor, FileMaps, ErrorWindow, InfoWindow
 
 
-class EmptyInputField(Exception):pass
+class InvalidDataInput(Exception):pass
 
 
 class PyConvert_Main(QtWidgets.QMainWindow, MainWindow.Ui_MainWindow):
@@ -17,6 +17,10 @@ class PyConvert_Main(QtWidgets.QMainWindow, MainWindow.Ui_MainWindow):
         # Set up base GUI parameters
         self.setupUi(self)
         self.Set_Functions()
+
+        self.ItemsRes_comboBox.addItems(["16x", "32x"])
+        self.BlocksRes_comboBox.addItems(["16x", "32x"])
+        self.Version_comboBox.addItems(["1.8", "1.13+"])
 
         # Initialize Error / Info windows
         self.ErrorWindow = ErrorWindow.ErrorWindow()
@@ -89,43 +93,77 @@ class PyConvert_Main(QtWidgets.QMainWindow, MainWindow.Ui_MainWindow):
         size = (rows * img_size), ((num_of_rows * img_size) // rows)
         return size
 
-    def Convert_Items(self, Output_Path):
-        Items_Input = './temp/items'
-        Coord_Spacing = self.ItemsRes_lineEdit.text()
+    def Convert_Items(self, Version, Output_Path):
+        Coord_Spacing = self.ItemsRes_comboBox.currentText()
 
-        if Coord_Spacing == "":
-            raise EmptyInputField("Item Resolution field CANNOT be left empty!")
-
-        if self.Fallback_checkBox.isChecked():
-            Fallback_Path = "./fallback/items"
+        if Coord_Spacing == "16x":
+            Coord_Spacing = 16
+        elif Coord_Spacing == "32x":
+            Coord_Spacing = 32
+        elif Coord_Spacing == "":
+            raise InvalidDataInput("Item Resolution field CANNOT be left empty!")
         else:
-            Fallback_Path = None
+            raise InvalidDataInput("Invalid Items res data!")
 
         Calculated_Image = self.Calc_Image_Size(16, 272, int(Coord_Spacing))
         Image_Size = (Calculated_Image[0], Calculated_Image[1])
-
-        Items_Creator = ImageCreator.ImageCreator(Items_Input, FileMaps.Java_Items, Image_Size, int(Coord_Spacing), Fallback_Path)
-        Items_Image = Items_Creator.create_image()
-        Items_Image.save(Output_Path + "/items.png")
-
-    def Convert_Blocks(self, Output_Path):
-        Blocks_Input = './temp/blocks'
-        Coord_Spacing = self.BlocksRes_lineEdit.text()
-
-        if Coord_Spacing == "":
-            raise EmptyInputField("Block Resolution field CANNOT be left empty!")
+        Unified_Size = Calculated_Image[0] + Calculated_Image[1]
 
         if self.Fallback_checkBox.isChecked():
-            Fallback_Path = "./fallback/blocks"
+            if Version == "1.8":
+                if Unified_Size == 528:
+                    Fallback_Path = "./fallback/1.8/16x/items"
+                elif Unified_Size == 1056:
+                    Fallback_Path = "./fallback/1.8/32x/items"
+            elif Version == "1.13+":
+                if Unified_Size == 528:
+                    Fallback_Path = "./fallback/1.13+/16x/items"
+                elif Unified_Size == 1056:
+                    Fallback_Path = "./fallback/1.13+/32x/items"
         else:
             Fallback_Path = None
 
+        Items_Input = './temp/items' if Version == "1.8" else './temp/item'
+        Items_Map = FileMaps.Java_Items_1_8 if Version == "1.8" else FileMaps.Java_Items_1_13
+        Items_Creator = ImageCreator.ImageCreator(Items_Input, Items_Map, Image_Size, int(Coord_Spacing), Fallback_Path)
+        Items_Image = Items_Creator.create_image()
+        Items_Image.save(Output_Path + "/items.png")
+
+    def Convert_Blocks(self, Version, Output_Path):
+        Coord_Spacing = self.BlocksRes_comboBox.currentText()
+
+        if Coord_Spacing == "16x":
+            Coord_Spacing = 16
+        elif Coord_Spacing == "32x":
+            Coord_Spacing = 32
+        elif Coord_Spacing == "":
+            raise InvalidDataInput("Terrain Resolution field CANNOT be left empty!")
+        else:
+            raise InvalidDataInput("Invalid Terrain res data!")
+
         Calculated_Image = self.Calc_Image_Size(16, 544, int(Coord_Spacing))
         Image_Size = (Calculated_Image[0], Calculated_Image[1])
+        Unified_Size = Calculated_Image[0] + Calculated_Image[1]
         mipMap2_Size = (Image_Size[0] // 2, Image_Size[1] // 2)
         mipMap3_Size = (Image_Size[0] // 4, Image_Size[1] // 4)
 
-        Blocks_Creator = ImageCreator.ImageCreator(Blocks_Input, FileMaps.Java_Blocks, Image_Size, int(Coord_Spacing), Fallback_Path)
+        if self.Fallback_checkBox.isChecked():
+            if Version == "1.8":
+                if Unified_Size == 800:
+                    Fallback_Path = "./fallback/1.8/16x/blocks"
+                elif Unified_Size == 1600:
+                    Fallback_Path = "./fallback/1.8/32x/blocks"
+            elif Version == "1.13+":
+                if Unified_Size == 800:
+                    Fallback_Path = "./fallback/1.13+/16x/blocks"
+                elif Unified_Size == 1600:
+                    Fallback_Path = "./fallback/1.13+/32x/blocks"
+        else:
+            Fallback_Path = None
+
+        Blocks_Input = './temp/blocks' if Version == "1.8" else './temp/block'
+        Blocks_Map = FileMaps.Java_Blocks_1_8 if Version == "1.8" else FileMaps.Java_Blocks_1_13
+        Blocks_Creator = ImageCreator.ImageCreator(Blocks_Input, Blocks_Map, Image_Size, int(Coord_Spacing), Fallback_Path)
         Blocks_Image = Blocks_Creator.create_image()
         Blocks_Image.save(Output_Path + "/terrain.png")
 
@@ -147,7 +185,9 @@ class PyConvert_Main(QtWidgets.QMainWindow, MainWindow.Ui_MainWindow):
     def Start_Conversion(self, Input_Path, Output_Path):
         try:
             if Input_Path == "":
-                raise EmptyInputField("The Input Path field CANNOT be left empty!")
+                raise InvalidDataInput("The Input Path field CANNOT be left empty!")
+
+            Version = self.Version_comboBox.currentText()
 
             Extractor = TextureExtractor.TextureExtractor(Input_Path, "temp")
             Extractor.extract_textures()
@@ -158,14 +198,19 @@ class PyConvert_Main(QtWidgets.QMainWindow, MainWindow.Ui_MainWindow):
             if not os.path.exists(Output_Path):
                 os.mkdir(Output_Path)
 
+        
+
+            Fire_Path = "./temp/blocks" if Version == "1.8" else "./temp/block"
+            Fire_Map = FileMaps.Java_Fire_1_8 if Version == "1.8" else FileMaps.Java_Fire_1_13
+
             Convert_Methods = [
-                (self.Items_checkBox.isChecked, self.Convert_Items, [Output_Path]),
-                (self.Blocks_checkBox.isChecked, self.Convert_Blocks, [Output_Path]),
-                (self.Armor_checkBox.isChecked, self.Convert, ['./temp/models/armor', Output_Path + "/armor", "./fallback/armor", FileMaps.Java_Armor]),
-                (self.Fire_checkBox.isChecked, self.Convert, ['./temp/blocks', Output_Path + "/fire", "./fallback/blocks", FileMaps.Java_Fire]),
-                (self.Particles_checkBox.isChecked, self.Convert, ['./temp/particle', Output_Path, "./fallback/particle", FileMaps.Java_Particles]),
-                (self.Misc_checkBox.isChecked, self.Convert, ['./temp/environment', Output_Path + "/environment", "./fallback/environment", FileMaps.Java_Environment]),
-                (self.Misc_checkBox.isChecked, self.Convert, ['./temp/misc', Output_Path + "/misc", "./fallback/misc", FileMaps.Java_Misc])
+                (self.Items_checkBox.isChecked, self.Convert_Items, [Version, Output_Path]),
+                (self.Blocks_checkBox.isChecked, self.Convert_Blocks, [Version, Output_Path]),
+                (self.Armor_checkBox.isChecked, self.Convert, ['./temp/models/armor', Output_Path + "/armor", "./fallback/Static/armor", FileMaps.Java_Armor]),
+                (self.Fire_checkBox.isChecked, self.Convert, [Fire_Path, Output_Path + "/fire", "./fallback/Static/fire", Fire_Map]),
+                (self.Particles_checkBox.isChecked, self.Convert, ['./temp/particle', Output_Path, "./fallback/Static/particle", FileMaps.Java_Particles]),
+                (self.Misc_checkBox.isChecked, self.Convert, ['./temp/environment', Output_Path + "/environment", "./fallback/Static/environment", FileMaps.Java_Environment]),
+                (self.Misc_checkBox.isChecked, self.Convert, ['./temp/misc', Output_Path + "/misc", "./fallback/Static/misc", FileMaps.Java_Misc])
             ]
 
             for Check_Func, Convert_Func, Args in Convert_Methods:
@@ -175,8 +220,8 @@ class PyConvert_Main(QtWidgets.QMainWindow, MainWindow.Ui_MainWindow):
             shutil.rmtree('./temp')
 
             self.InfoWindow.CreateWindow("Process Completed!",
-                                         f"Successfully completed conversion of '{os.path.basename(Input_Path)}' into '{os.path.basename(Output_Path)}'!",
-                                         500, 200)
+                                 f"Successfully completed conversion of '{os.path.basename(Input_Path)}' into '{os.path.basename(Output_Path)}'!",
+                                 500, 200)
             self.InfoWindow.show()
         except Exception as e:
             self.ErrorWindow.CreateWindow("Error!",

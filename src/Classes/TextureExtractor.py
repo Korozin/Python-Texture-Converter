@@ -9,10 +9,12 @@ class TextureExtractor:
     def extract_textures(self):
         with zipfile.ZipFile(self.input_path, 'r') as zip_ref:
             for name in zip_ref.namelist():
-                if 'textures' in name and name.endswith('/'):
+                if (any(keyword in name for keyword in ['textures', 'texture']) and
+                        name.endswith('/') and 'minecraft/' in name):
                     textures_path = os.path.dirname(name)
                     for member in zip_ref.infolist():
-                        if member.filename.startswith(textures_path) and not member.is_dir():
+                        if (member.filename.startswith(textures_path) and
+                                not member.is_dir() and 'minecraft/' in member.filename):
                             member.filename = os.path.relpath(member.filename, textures_path)
                             target_path = os.path.join(self.output_path, member.filename)
                             os.makedirs(os.path.dirname(target_path), exist_ok=True)

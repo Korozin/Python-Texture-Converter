@@ -1,4 +1,5 @@
-import shutil, os
+import shutil
+import os
 
 class FileMover:
     def __init__(self, source_dir, fallback_dir, output_dir, filename_map):
@@ -8,18 +9,19 @@ class FileMover:
         self.filename_map = filename_map
 
     def convert(self):
-        if not os.path.exists(self.output_dir):
-            os.makedirs(self.output_dir)
-
         for source_filename, output_filename in self.filename_map.items():
             source_filepath = os.path.join(self.source_dir, source_filename)
             if os.path.exists(source_filepath):
+                if not os.path.exists(self.output_dir):
+                    os.makedirs(self.output_dir)
+
                 output_filepath = os.path.join(self.output_dir, output_filename)
                 shutil.copy(source_filepath, output_filepath)
-            else:
+            elif self.fallback_dir is not None:
                 fallback_filepath = os.path.join(self.fallback_dir, source_filename)
                 if os.path.exists(fallback_filepath):
+                    if not os.path.exists(self.output_dir):
+                        os.makedirs(self.output_dir)
+
                     output_filepath = os.path.join(self.output_dir, output_filename)
                     shutil.copy(fallback_filepath, output_filepath)
-                else:
-                    continue
