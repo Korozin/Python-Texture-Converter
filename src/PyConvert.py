@@ -217,7 +217,7 @@ class PyConvert_Main(QtWidgets.QMainWindow, MainWindow.Ui_MainWindow):
                 if Check_Func():
                     Convert_Func(*Args)
 
-            shutil.rmtree('temp')
+            shutil.rmtree("./temp")
 
             self.InfoWindow.CreateWindow("Process Completed!",
                                  f"Successfully completed conversion of '{os.path.basename(Input_Path)}' into '{os.path.basename(Output_Path)}'!",
