@@ -3,6 +3,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        MainWindow.setWindowModality(QtCore.Qt.ApplicationModal)
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(493, 430)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.MinimumExpanding)

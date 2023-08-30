@@ -10,16 +10,12 @@ class ErrorWindow(PyQt5.QtWidgets.QMainWindow):
         self.decoded_data = base64.b64decode(self.error_icon)
         
     def CreateWindow(self, WindowText, LabelText, x_size, y_size):
+        self.setWindowModality(PyQt5.QtCore.Qt.ApplicationModal)
         self.setWindowTitle(WindowText)
         self.setFixedSize(x_size, y_size)
         self.pixmap = PyQt5.QtGui.QPixmap()
         self.pixmap.loadFromData(self.decoded_data)
         self.setWindowIcon(PyQt5.QtGui.QIcon(self.pixmap))
-        
-        qr = self.frameGeometry()
-        cp = PyQt5.QtWidgets.QDesktopWidget().availableGeometry().center()
-        qr.moveCenter(cp)
-        self.move(qr.topLeft())
     
         hbox = PyQt5.QtWidgets.QHBoxLayout()
         vbox = PyQt5.QtWidgets.QVBoxLayout()

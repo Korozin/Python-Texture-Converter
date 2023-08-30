@@ -189,7 +189,7 @@ class PyConvert_Main(QtWidgets.QMainWindow, MainWindow.Ui_MainWindow):
 
             Version = self.Version_comboBox.currentText()
 
-            Extractor = TextureExtractor.TextureExtractor(Input_Path, "temp")
+            Extractor = TextureExtractor.TextureExtractor(Version, Input_Path, "temp")
             Extractor.extract_textures()
 
             if Output_Path == "":
@@ -217,7 +217,7 @@ class PyConvert_Main(QtWidgets.QMainWindow, MainWindow.Ui_MainWindow):
                 if Check_Func():
                     Convert_Func(*Args)
 
-            shutil.rmtree('./temp')
+            shutil.rmtree('temp')
 
             self.InfoWindow.CreateWindow("Process Completed!",
                                  f"Successfully completed conversion of '{os.path.basename(Input_Path)}' into '{os.path.basename(Output_Path)}'!",
